@@ -91,8 +91,9 @@ export class FFmpegExporterClient implements Exporter {
   }
 
   public async handleFrame(canvas: HTMLCanvasElement): Promise<void> {
+    const data = canvas.toDataURL('image/jpeg');
     await this.invoke('handleFrame', {
-      data: canvas.toDataURL('image/png'),
+      data,
     });
   }
 

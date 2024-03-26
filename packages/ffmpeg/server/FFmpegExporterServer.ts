@@ -146,9 +146,25 @@ export class FFmpegExporterServer {
     }
   }
 
+  private resolvePath(assetPath: string) {
+    let resolvedPath: string;
+    if (assetPath.startsWith('/@fs')) {
+      resolvedPath = assetPath.replace('/@fs', '');
+    } else if (assetPath.startsWith('http')) {
+      resolvedPath = assetPath;
+    } else if (assetPath.startsWith('/')) {
+      resolvedPath = path.join(this.config.output, '../public', assetPath);
+    } else {
+      resolvedPath = path.join(this.config.output, '..', assetPath);
+    }
+    return resolvedPath;
+  }
+
   public async checkForAudioStream(asset: MediaAsset): Promise<boolean> {
+    const resolvedPath = this.resolvePath(asset.src);
+
     return new Promise((resolve, reject) => {
-      ffmpeg.ffprobe(asset.src, (err, metadata) => {
+      ffmpeg.ffprobe(resolvedPath, (err, metadata) => {
         if (err) {
           console.error(
             'error checking for audioStream for asset',
@@ -213,17 +229,7 @@ export class FFmpegExporterServer {
     );
 
     const atempoFilters = await this.calculateAtempoFilters(asset.playbackRate); // atempo filter value must be >=0.5 and <=100. If the value is higher or lower, this function sets multiple atempo filters
-
-    let resolvedPath: string;
-    if (asset.src.startsWith('/@fs')) {
-      resolvedPath = asset.src.replace('/@fs', '');
-    } else if (asset.src.startsWith('http')) {
-      resolvedPath = asset.src;
-    } else if (asset.src.startsWith('/')) {
-      resolvedPath = path.join(this.config.output, '../public', asset.src);
-    } else {
-      resolvedPath = path.join(this.config.output, '..', asset.src);
-    }
+    const resolvedPath = this.resolvePath(asset.src);
 
     await new Promise<void>((resolve, reject) => {
       const audioFilters = [

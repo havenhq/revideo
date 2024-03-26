@@ -33,8 +33,13 @@ export const renderVideo = async (
   }
 
   await page.goto(`http://localhost:${port}/render`);
-  await page.exposeFunction('onRenderComplete', async () => {
-    await Promise.all([browser.close(), server.close()]);
-    console.log('Rendering complete.');
+  return new Promise<void>((res, rej) => {
+    return page
+      .exposeFunction('onRenderComplete', async () => {
+        await Promise.all([browser.close(), server.close()]).catch(rej);
+        console.log('Rendering complete.');
+        res();
+      })
+      .catch(rej);
   });
 };
