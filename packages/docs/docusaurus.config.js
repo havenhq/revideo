@@ -84,8 +84,8 @@ const config = {
         copyright: `Copyright © ${new Date().getFullYear()} Revideo. Built with Docusaurus.`,
       },
       algolia: {
-        appId: 'Q6Z7BJ83RF',
-        apiKey: '825d6a74e138e6e1378e9669b22720f0',
+        appId: '7TPX3AK6TB',
+        apiKey: '9ef88c7f8f21fd8cb1a64b4af458b2c8',
         indexName: 'revideoio',
       },
       prism: {
