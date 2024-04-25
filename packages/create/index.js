@@ -101,7 +101,7 @@ const PLUGINS = {
   const templateDir = path.resolve(
     fileURLToPath(import.meta.url),
     '..',
-    `template-2d-ts`,
+    `basic-template`,
   );
   copyDirectory(templateDir, response.path);
   createConfig(response, plugins);
