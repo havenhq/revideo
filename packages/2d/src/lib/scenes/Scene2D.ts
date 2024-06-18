@@ -11,7 +11,7 @@ import {
   Vector2,
   useLogger,
 } from '@revideo/core';
-import {Audio, Node, Video, View2D} from '../components';
+import {Audio, HlsVideo, Node, Video, View2D} from '../components';
 
 export class Scene2D extends GeneratorScene<View2D> implements Inspectable {
   private view: View2D | null = null;
@@ -157,8 +157,11 @@ export class Scene2D extends GeneratorScene<View2D> implements Inspectable {
 
   public override getMediaAssets(): Array<AssetInfo> {
     const playingVideos = Array.from(this.registeredNodes.values())
-      .filter((node): node is Video => node instanceof Video)
-      .filter(video => (video as Video).isPlaying());
+      .filter(
+        (node): node is Video | HlsVideo =>
+          node instanceof Video || node instanceof HlsVideo,
+      )
+      .filter(video => (video as Video | HlsVideo).isPlaying());
 
     const playingAudios = Array.from(this.registeredNodes.values())
       .filter((node): node is Audio => node instanceof Audio)

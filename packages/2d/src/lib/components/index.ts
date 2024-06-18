@@ -5,6 +5,7 @@ export * from './Code';
 export * from './CubicBezier';
 export * from './Curve';
 export * from './Grid';
+export * from './HlsVideo';
 export * from './Icon';
 export * from './Img';
 export * from './Knot';

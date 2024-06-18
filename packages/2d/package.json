@@ -42,6 +42,7 @@
     "@lezer/highlight": "^1.2.0",
     "@revideo/core": "0.4.2",
     "code-fns": "^0.8.2",
+    "hls.js": "^1.5.11",
     "mathjax-full": "^3.2.2",
     "parse-svg-path": "^0.1.2"
   }
