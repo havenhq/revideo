@@ -87,7 +87,7 @@ async function initBrowserAndServer(
   variables?: Record<string, unknown>,
 ) {
   const args = settings.puppeteer?.args ?? [];
-  args.includes('--single-process') || args.push('--single-process');
+  //args.includes('--single-process') || args.push('--single-process');
 
   const resolvedProjectPath = path.join(process.cwd(), projectFile);
   const [browser, server] = await Promise.all([
@@ -158,6 +158,9 @@ async function renderVideoOnPage(
     printProgress();
   }, 1000);
 
+  console.log('id', id);
+  console.log('url', url);
+
   const page = await browser.newPage();
   if (!server.httpServer) {
     throw new Error('HTTP server is not initialized');
@@ -196,7 +199,6 @@ async function renderVideoOnPage(
 
   const renderingComplete = new Promise<void>((resolve, reject) => {
     page.exposeFunction('onRenderComplete', async () => {
-      await Promise.all([browser.close(), server.close()]);
       clearInterval(interval);
       resolve();
     });
@@ -214,6 +216,7 @@ async function renderVideoOnPage(
   });
 
   await page.goto(url);
+  console.log('went to', url);
 
   return renderingComplete;
 }
@@ -391,26 +394,51 @@ export const renderVideo = async ({
   const {outputFileName, outputFolderName, numOfWorkers, hiddenFolderId} =
     getPropDefaults(settings);
 
-  // Start rendering
+  const port =
+    settings.viteBasePort !== undefined ? settings.viteBasePort : 9000;
+
+  const {browser, server, resolvedPort} = await initBrowserAndServer(
+    port,
+    projectFile,
+    outputFolderName,
+    settings,
+    variables,
+  );
+
   const renderPromises = [];
   for (let i = 0; i < numOfWorkers; i++) {
+    const url = buildUrl(
+      resolvedPort,
+      `${outputFileName}-${i}`,
+      i,
+      numOfWorkers,
+      settings.range,
+      hiddenFolderId,
+      settings.dimensions,
+    );
+
+    const progressTracker = new Map<number, number>();
+
     renderPromises.push(
-      initializeBrowserAndStartRendering(
-        projectFile,
-        outputFileName,
-        outputFolderName,
+      renderVideoOnPage(
         i,
-        numOfWorkers,
-        settings,
-        hiddenFolderId,
-        variables,
+        browser,
+        server,
+        url,
+        progressTracker,
         settings.progressCallback,
+        settings.logProgress,
       ),
     );
   }
 
+  await new Promise(resolve => setTimeout(resolve, 5000));
+  console.log('now going');
+  await activateTabs(browser);
+
   // Wait for workers to finish rendering
   await Promise.all(renderPromises);
+  await Promise.all([browser.close(), server.close()]);
 
   // Collect and concatenate audio and video files
   const {audioFiles, videoFiles} = await collectAudioAndVideoFiles(
@@ -428,6 +456,13 @@ export const renderVideo = async ({
 
   return path.join(outputFolderName, `${outputFileName}.mp4`);
 };
+
+async function activateTabs(browser: Browser) {
+  const pages = await browser.pages();
+  for (const page of pages) {
+    await page.bringToFront();
+  }
+}
 
 interface RenderPartialVideoProps extends RenderVideoProps {
   workerId: number;
