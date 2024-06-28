@@ -30,7 +30,7 @@ check out our [docs](https://docs.re.video/), our
 our [Discord server](https://discord.com/invite/MVJsrqjy3j).
 
 #### News 🔥
-
+- [06/05/2024] Check out our new [SaaS Template](https://github.com/redotvideo/examples/tree/main/saas-template) if you want to build a video editing app with Revideo
 - [05/21/2024] We released an
   [example](https://github.com/redotvideo/revideo-examples/tree/main/google-cloud-run-parallelized)
   on how to parallelize rendering jobs with Google Cloud Functions
