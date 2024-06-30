@@ -30,7 +30,8 @@ const config = {
       metadata: [{name: 'keywords', content: 'typescript, animation, library'}],
       image: 'img/banner.png',
       colorMode: {
-        defaultMode: 'dark',
+        defaultMode: 'light',
+        respectPrefersColorScheme: false,
       },
       navbar: {
         logo: {

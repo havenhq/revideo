@@ -14,17 +14,6 @@ These files usually have a `.webm` extension.
 You can use command line tools such as `ffmpeg` to re-encode videos from one
 codec to another.
 
-Transparency is supported by default, but will not work when setting the `png`
-setting on the `<Video/>` component to `false`.
-
-```tsx
-// Transparency with the VP9 codec supported
-<Video src={'your-video.webm'} play={true} />
-
-// Renders faster but doesn't support transparency
-<Video src={'your-video.webm'} play={true} png={false} />
-```
-
 **Note:** There are other video codes that support transparency, such as `HEVC`,
 which might show up correctly in the preview through the ui or inside the
 player, which will lose their transparency when rendering.

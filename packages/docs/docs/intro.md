@@ -5,14 +5,15 @@ slug: /
 
 # Welcome to Revideo!
 
-Revideo lets you create videos programmatically. It is forked from the animation
-library [Motion Canvas](https://motioncanvas.io/) and extended to provide
-features that are essential for video, such as:
+Revideo is an open-source framework for programmatic video editing. It lets you
+create video templates in Typescript and provides an API to render these video
+templates with dynamic inputs. It also provides a player component that you can
+embed into your website to let users preview videos before exporting them to
+mp4. Developers use Revideo to automate certain video editing tasks or to build
+entire web-based video editors.
 
-- the ability to integrate and edit Audio
-- an API for rendering parameterized videos
-
-We initially built Revideo to provide an open-source alternative to
-[Remotion](https://www.remotion.dev/) that is "good enough", but quickly noticed
-that the Motion Canvas API makes it substantially easier to build sophisticated
-videos.
+Revideo is forked from
+[Motion Canvas](https://github.com/motion-canvas/motion-canvas), an editor that
+lets you create animations with code. While Motion Canvas happens to be
+distributed as an npm package, the maintainers don't intend for it to be used as
+a library but as a standalone editing tool.

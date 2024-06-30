@@ -1,12 +1,12 @@
 ---
-sidebar_position: 4
+sidebar_position: 6
 slug: /parameterized-video
 ---
 
 # Parameterized Videos
 
 To render videos with dynamic inputs or to build video apps, you can use video
-parameters. Consider this example of a welcome video post sign-up:
+parameters. Consider this example video:
 
 ```tsx editor
 import {Txt, makeScene2D} from '@revideo/2d';
@@ -27,8 +27,8 @@ export default makeScene2D(function* (view) {
 });
 ```
 
-Instead of using the generic `"new user"` string, we might want to use the
-user's real name - we can do this using a project variable:
+Instead of using the generic `"new user"` string, we might want to use a real
+name - we can do this using a project variable:
 
 ```tsx
 import {Txt, makeScene2D} from '@revideo/2d';
@@ -49,8 +49,9 @@ export default makeScene2D(function* (view) {
 });
 ```
 
-This will also assign `"new user"` to the `name` variable, but use the username
-variable if it is passed to the project.
+The first argument of `.get()` refers to the name of the variable we want to
+use, and the second assigns a default value if no variable is provided. Here,
+"new user" will be used if the username variable is not provided.
 
 ### Passing Parameters to `renderVideo()`
 
@@ -59,13 +60,16 @@ You can pass variables to `renderVideo()` as follows:
 ```ts
 import {renderVideo} from '@revideo/renderer';
 
-renderVideo('./src/project.ts', {username: 'Mike'});
+renderVideo({
+  projectFile: './src/project.ts',
+  variables: {username: 'Mike'},
+});
 ```
 
 ### Passing Parameters to visual editor
 
 To use variables in the visual editor, you can pass them to `makeProject` in
-`src/project.ts`:
+`src/project.ts`.
 
 ```ts
 import {makeProject} from '@revideo/core';
@@ -79,11 +83,12 @@ export default makeProject({
 
 ### Complex Parameters
 
-Parameters allow you to extensively customize videos. For instance, you can also
+Parameters allow you to customize videos extensively. For instance, you can also
 pass file names as parameters, which can in turn point to audio or images
 generated from AI services like text-to-speech software or image generators.
 
-To understand how to build video projects with more complex parameters, you can
-check out our [reddit post reader example](/reddit-post-reader). This project
-fetches reddit posts and generates videos that reads them to the viewer using
-speech-to-text software.
+If you want to see an example project using more complex parameters in action,
+you can check out our
+[Youtube Short project](https://github.com/redotvideo/examples/tree/main/youtube-shorts).
+This project uses AI-generated images and subtitles, which are passed as a list
+of words along with timestamps.
