@@ -266,7 +266,7 @@ export abstract class GeneratorScene<T>
 
     if (DependencyContext.hasPromises()) {
       const promises = await DependencyContext.consumePromises();
-      this.logger.error({
+      this.logger.warn({
         message:
           'Tried to access an asynchronous property before the node was ready. ' +
           'Make sure to yield the node before accessing the property.',
