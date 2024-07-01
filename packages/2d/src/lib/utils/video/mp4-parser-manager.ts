@@ -15,12 +15,22 @@ export async function getFrame(
 
   const frameDuration = 1 / fps;
 
+  /**
+   * Sometimes, HTMLVideoElement.duration is not accurate, which can lead to the
+   * requested time being greater than the duration.
+   * To prevent this, we clamp the time to the duration reported by the extractor.
+   */
+  const duration = extractor?.getDuration();
+  if (duration && time > duration) {
+    time = duration;
+  }
+
   const isOldFrame =
     extractor && Math.abs(time - extractor.getLastTime()) < frameDuration / 2;
 
   // If time has not changed, return the last frame
-  if (isOldFrame) {
-    const lastFrame = extractor!.getLastFrame();
+  if (extractor && isOldFrame) {
+    const lastFrame = extractor.getLastFrame();
     if (!lastFrame) {
       throw new Error('No last frame');
     }
