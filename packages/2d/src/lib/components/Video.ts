@@ -71,7 +71,8 @@ export class Video extends Media {
     this
   >;
 
-  public detectedFileType: 'mp4' | 'webm' | 'hls' | 'unknown' = 'unknown';
+  public detectedFileType: 'mp4' | 'webm' | 'hls' | 'mov' | 'unknown' =
+    'unknown';
   private fileTypeWasDetected: boolean = false;
 
   private static readonly pool: Record<string, HTMLVideoElement> = {};
@@ -325,10 +326,13 @@ export class Video extends Media {
     ).toString();
   }
 
-  private async detectFileType(): Promise<'mp4' | 'webm' | 'hls' | 'unknown'> {
+  private async detectFileType(): Promise<
+    'mp4' | 'webm' | 'hls' | 'mov' | 'unknown'
+  > {
     if (this.fullSource().split('?')[0].endsWith('.mp4')) return 'mp4';
     if (this.fullSource().split('?')[0].endsWith('.webm')) return 'webm';
     if (this.fullSource().split('?')[0].endsWith('.m3u8')) return 'hls';
+    if (this.fullSource().split('?')[0].endsWith('.mov')) return 'mov';
 
     if (
       this.fullSource().startsWith('http:') ||
@@ -341,6 +345,7 @@ export class Video extends Media {
         if (contentType) {
           if (contentType.includes('video/mp4')) return 'mp4';
           if (contentType.includes('video/webm')) return 'webm';
+          if (contentType.includes('video/quicktime')) return 'mov';
           if (
             contentType.includes('application/vnd.apple.mpegurl') ||
             contentType.includes('application/x-mpegURL')
